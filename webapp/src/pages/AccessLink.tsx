@@ -141,5 +141,5 @@ export default function AccessLink() {
     );
   }
 
-  return <BrandLoader label="Opening your workspace…" />;
+  return <BrandLoader />;
 }
