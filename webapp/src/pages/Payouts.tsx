@@ -13,6 +13,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { merchantsAPI, type BankAccount } from "@/lib/api";
+import BankPicker from "@/components/BankPicker";
 import { useAction, useBankAccounts, useBanks, useKyc, useSettlementStatus } from "@/hooks/useApi";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/context/ToastContext";
@@ -29,7 +30,6 @@ import {
   Modal,
   PageHeader,
   Pill,
-  Select,
   TONE_MEANING,
   type ToneKind,
   Toggle,
@@ -382,20 +382,12 @@ export default function Payouts() {
       >
         <div className="space-y-4">
           <Field label="Bank" htmlFor="bank">
-            <Select
+            <BankPicker
               id="bank"
+              banks={banks.data ?? []}
               value={accountForm.bank_code}
-              onChange={(event) =>
-                setAccountForm({ ...accountForm, bank_code: event.target.value })
-              }
-            >
-              <option value="">Select your bank</option>
-              {(banks.data ?? []).map((bank) => (
-                <option key={bank.code} value={bank.code}>
-                  {bank.name}
-                </option>
-              ))}
-            </Select>
+              onChange={(code) => setAccountForm({ ...accountForm, bank_code: code })}
+            />
           </Field>
           <Field label="Account number" htmlFor="account-number" hint="10 digits (NUBAN).">
             <Input
