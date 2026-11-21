@@ -5,7 +5,6 @@ import {
   InlineNote,
   Input,
   SegmentedControl,
-  Select,
   TONE_MEANING,
   type ToneKind,
 } from "@/components/ui";
@@ -14,6 +13,7 @@ import { useGateway } from "@/lib/gateway";
 import { useToast } from "@/context/ToastContext";
 import { useAction, useBankAccounts, useBanks, useKyc } from "@/hooks/useApi";
 import { APIError, merchantsAPI } from "@/lib/api";
+import BankPicker from "@/components/BankPicker";
 import { formatDateTime } from "@/lib/format";
 import {
   BadgeCheck,
@@ -366,18 +366,12 @@ export default function KycCard() {
             <>
               <div className="grid gap-3 sm:grid-cols-2">
                 <Field label="Bank" htmlFor="kyc-bank">
-                  <Select
+                  <BankPicker
                     id="kyc-bank"
+                    banks={banks.data ?? []}
                     value={bankCode}
-                    onChange={(event) => setBankCode(event.target.value)}
-                  >
-                    <option value="">Select bank</option>
-                    {(banks.data ?? []).map((bank) => (
-                      <option key={bank.code} value={bank.code}>
-                        {bank.name}
-                      </option>
-                    ))}
-                  </Select>
+                    onChange={setBankCode}
+                  />
                 </Field>
                 <Field label="Account number" htmlFor="kyc-account">
                   <Input
