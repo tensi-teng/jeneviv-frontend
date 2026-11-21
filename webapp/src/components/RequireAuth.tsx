@@ -7,7 +7,7 @@ export default function RequireAuth() {
   const location = useLocation();
 
   if (loading) {
-    return <BrandLoader label="Opening your workspace…" />;
+    return <BrandLoader />;
   }
 
   if (!isAuthenticated) {
