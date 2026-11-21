@@ -19,7 +19,7 @@ function Note({ tone = "info", children }: { tone?: "info" | "warning" | "error"
   return (
     <div
       className={`flex items-start gap-2.5 rounded-xl border px-3.5 py-3 text-[12.5px] leading-relaxed text-ink ${
-        tone === "info" ? "border-ink/15 bg-white" : "border-ink bg-[#f2f2f2]"
+        tone === "info" ? "border-ink/15" : "border-ink"
       }`}
     >
       <Icon size={15} className="mt-px shrink-0" aria-hidden="true" />
@@ -54,8 +54,8 @@ function Shell({ children, wide = false }: { children: ReactNode; wide?: boolean
 }
 
 /** White surface used for the summary and the form. */
-const card =
-  "rounded-[24px] bg-white shadow-[0_1px_2px_rgba(17,17,17,0.04),0_18px_40px_-24px_rgba(17,17,17,0.25)]";
+// Sections sit directly on the page's grey background. No white panel or shadow.
+const card = "rounded-[24px]";
 
 /** A label on the left, a value on the right, separated by a hairline. */
 function Line({ label, children }: { label: string; children: ReactNode }) {
