@@ -380,9 +380,9 @@ export default function Dashboard() {
       ) : null}
 
       {/* Main content grid - single column on mobile, two columns on laptop */}
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
+      <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px]">
         {/* Left column - main metrics and charts */}
-        <div className="space-y-8">
+        <div className="space-y-12">
           {/* the wallet stack: headline on top, metrics tucked beneath */}
           <SummaryPanel columns={2}>
           <Reveal delay={40} className="wallet-span">
