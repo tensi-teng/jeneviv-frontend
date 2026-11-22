@@ -38,9 +38,82 @@
     background: #ffd8c7;
   }
 
+  /* Checkboxes and radios take the brand look instead of the browser default:
+     an ink box or dot when checked, a brand ring when focused. */
   input[type="checkbox"],
   input[type="radio"] {
-    accent-color: #101010;
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    flex-shrink: 0;
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border: 1.5px solid #bdbdb8;
+    background: #fff;
+    cursor: pointer;
+    transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  input[type="checkbox"] {
+    border-radius: 5px;
+  }
+
+  input[type="radio"] {
+    border-radius: 9999px;
+  }
+
+  input[type="checkbox"]:checked,
+  input[type="radio"]:checked {
+    background: #101010;
+    border-color: #101010;
+  }
+
+  input[type="checkbox"]:checked::before {
+    content: "";
+    width: 9px;
+    height: 5px;
+    border: solid #fff;
+    border-width: 0 0 2px 2px;
+    transform: translateY(-1px) rotate(-45deg);
+  }
+
+  input[type="radio"]:checked::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: #fff;
+  }
+
+  input[type="checkbox"]:focus-visible,
+  input[type="radio"]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 72, 0, 0.22);
+  }
+
+  input[type="checkbox"]:disabled,
+  input[type="radio"]:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Native dropdown lists: white with ink text and a soft highlight, so they
+     match the rest of the app instead of the operating system's default. */
+  html {
+    color-scheme: light;
+  }
+
+  select.input option {
+    background: #fff;
+    color: #101010;
+  }
+
+  select.input option:checked {
+    background: #f4f4f2;
+    font-weight: 600;
   }
 
   /* Numbers should never jump around as data refreshes. */
