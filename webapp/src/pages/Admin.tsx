@@ -9,6 +9,7 @@ import {
   useAuditLogs,
 } from "@/hooks/useApi";
 import { useAuth } from "@/context/AuthContext";
+import AdminPushToggle from "@/components/AdminPushToggle";
 import { useToast } from "@/context/ToastContext";
 import {
   formatDate,
@@ -129,9 +130,12 @@ export default function Admin() {
         title="Admin"
         description="Merchant approvals, platform volume, refunds and the audit trail behind every action."
         actions={
-          <span className="inline-flex items-center gap-2 rounded-full bg-cream px-3 py-1.5 text-[12px] font-semibold text-ink-soft">
-            <ShieldCheck size={13} /> {user?.email}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <AdminPushToggle />
+            <span className="inline-flex items-center gap-2 rounded-full bg-cream px-3 py-1.5 text-[12px] font-semibold text-ink-soft">
+              <ShieldCheck size={13} /> {user?.email}
+            </span>
+          </div>
         }
       />
 
