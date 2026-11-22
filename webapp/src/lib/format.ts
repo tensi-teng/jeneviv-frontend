@@ -4,7 +4,6 @@
 
 export const CURRENCY_SYMBOLS: Record<string, string> = {
   NGN: "₦",
-  USD: "$",
   GBP: "£",
   EUR: "€",
   KES: "KSh",
