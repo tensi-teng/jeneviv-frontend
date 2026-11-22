@@ -713,7 +713,6 @@ export default function Collections() {
                 }
               >
                 <option value="NGN">NGN — Naira</option>
-                <option value="USD">USD — Dollar</option>
               </Select>
             </Field>
 

@@ -871,7 +871,6 @@ export default function CollectionDetail() {
                       onChange={(event) => setSettings({ ...settings, currency: event.target.value })}
                     >
                       <option value="NGN">NGN</option>
-                      <option value="USD">USD</option>
                     </Select>
                   </Field>
                   <Field label="Expected payers" htmlFor="edit-target">
