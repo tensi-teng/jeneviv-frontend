@@ -3,7 +3,7 @@ import {
   AlertCircle,
   Banknote,
   Building2,
-  CheckCircle2,
+  Check,
   Landmark,
   Plus,
   RefreshCw,
@@ -303,7 +303,7 @@ export default function Payouts() {
             <CardHeader
               title="Verification"
               subtitle="Required before a collection can accept money"
-              icon={<CheckCircle2 size={16} />}
+              icon={<Check size={16} />}
             />
             <div className="flex items-center justify-between gap-3 border-b border-line-soft py-2.5 text-[12.5px]">
               <span className="text-ink-muted">Workspace</span>

@@ -1,7 +1,7 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
-import { BadgeCheck, Check, CheckCircle2, Copy, Download, Loader2, ShieldCheck, TriangleAlert } from "lucide-react";
+import { BadgeCheck, Check, Copy, Download, Loader2, ShieldCheck, TriangleAlert } from "lucide-react";
 import { APIError, verifyAPI, type PublicReceipt } from "@/lib/api";
 import { copyText, formatMoney } from "@/lib/format";
 import { Button, InlineNote } from "@/components/ui";
@@ -241,7 +241,7 @@ export default function VerifyReceipt() {
           <>
             <div className="mb-5 flex items-center gap-3">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand/10 text-brand">
-                <CheckCircle2 size={17} />
+                <Check size={17} />
               </span>
               <div className="min-w-0">
                 <p className="text-[15px] font-bold leading-tight tracking-[-0.02em]">This receipt is valid</p>

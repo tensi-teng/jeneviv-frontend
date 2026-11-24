@@ -1,6 +1,6 @@
 import { FormEvent, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowRight, Check, CheckCircle2, Eye, EyeOff, Lock, TriangleAlert } from "lucide-react";
+import { ArrowRight, Check, Eye, EyeOff, Lock, TriangleAlert } from "lucide-react";
 import { authAPI, tokenStore } from "@/lib/api";
 import { errorMessage } from "@/hooks/useApi";
 import AuthLayout from "@/components/AuthLayout";
@@ -127,7 +127,7 @@ export default function ResetPassword() {
       >
         <div className="rounded-card border border-line bg-white px-5 py-6 shadow-card">
           <span className="grid h-11 w-11 place-items-center rounded-full bg-[#d5e8c4]">
-            <CheckCircle2 size={19} className="text-ink" />
+            <Check size={19} className="text-ink" />
           </span>
           <p className="mt-4 text-[16px] font-bold tracking-tight text-ink">
             Your password was changed

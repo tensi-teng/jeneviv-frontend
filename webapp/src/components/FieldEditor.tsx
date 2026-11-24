@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { ArrowDown, ArrowUp, CheckCircle2, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Check, Plus, Trash2 } from "lucide-react";
 import type { CollectionField, FieldType } from "@/lib/api";
 import { slugifyFieldId } from "@/lib/format";
 import { Button, Field, InlineNote, Input, Select, Toggle } from "@/components/ui";
@@ -286,7 +286,7 @@ export default function FieldEditor({
                       aria-label="Email is required and cannot be changed"
                       title="Email is required and cannot be changed"
                     >
-                      <CheckCircle2 size={12} className="text-white" />
+                      <Check size={12} className="text-white" />
                     </span>
                   </div>
                 ) : (

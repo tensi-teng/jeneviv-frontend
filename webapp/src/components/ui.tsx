@@ -14,20 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  AlertCircle,
-  ArrowUpRight,
-  Check,
-  X,
-  CheckCircle2,
-  ChevronDown,
-  Copy,
-  Info,
-  Loader2,
-  Search,
-  SlidersHorizontal,
-  TriangleAlert,
-} from "lucide-react";
+import { AlertCircle, ArrowUpRight, Check, X, ChevronDown, Copy, Info, Loader2, Search, SlidersHorizontal, TriangleAlert } from "lucide-react";
 import { copyText, initials, statusLabel, statusTone, type Tone } from "@/lib/format";
 
 /* --------------------------------------------------------------- primitives */
@@ -871,7 +858,7 @@ export function InlineNote({
     },
     success: {
       wrap: "border-[#c9ecdb] bg-[#f1fbf6] text-[#0c6742]",
-      icon: <CheckCircle2 size={15} />,
+      icon: <Check size={15} />,
     },
     error: {
       wrap: "border-[#f4cecb] bg-[#fdf2f1] text-[#a92b22]",

@@ -1,6 +1,6 @@
 import { FormEvent, ReactNode, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AlertCircle, ArrowRight, Check, CheckCircle2, TriangleAlert } from "lucide-react";
+import { AlertCircle, ArrowRight, Check, TriangleAlert } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { errorMessage } from "@/hooks/useApi";
 import AuthLayout from "@/components/AuthLayout";
@@ -27,7 +27,7 @@ function FeedbackCard({
     success: {
       wrap: "border-ink/20 bg-[#f1fbf6]",
       mark: "bg-[#c9ecdb] text-success",
-      icon: <CheckCircle2 size={16} />,
+      icon: <Check size={16} />,
     },
     error: {
       wrap: "border-ink/20 bg-[#fdf2f1]",
