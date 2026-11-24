@@ -362,6 +362,26 @@ export default function Payouts() {
                     {settlementStatus.data.bank_account_verified ? "Yes" : "No"}
                   </Pill>
                 </div>
+                {settlementStatus.data.has_subaccount && (
+                  <div className="flex items-center justify-between gap-3 border-b border-line-soft py-2.5 text-[12.5px]">
+                    <span className="text-ink-muted">Paystack verified</span>
+                    <Pill
+                      tone={
+                        settlementStatus.data.subaccount_verified === true
+                          ? "green"
+                          : settlementStatus.data.subaccount_verified === false
+                          ? "amber"
+                          : "neutral"
+                      }
+                    >
+                      {settlementStatus.data.subaccount_verified === true
+                        ? "Yes"
+                        : settlementStatus.data.subaccount_verified === false
+                        ? "Unverified"
+                        : "Unknown"}
+                    </Pill>
+                  </div>
+                )}
                 <div className="flex items-center justify-between gap-3 py-2.5 text-[12.5px]">
                   <span className="text-ink-muted">Direct settlement</span>
                   <Pill tone={settlementStatus.data.direct_settlement_active ? "green" : "red"}>
