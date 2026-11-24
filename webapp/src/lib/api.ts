@@ -1090,6 +1090,13 @@ export const transactionsAPI = {
 /* ------------------------------------------------------------------- payouts */
 
 export const payoutsAPI = {
+  /** Withdraw wallet money (from payments collected before Paystack) to a bank account in naira. */
+  create: (body: { bank_account_id: string; amount: number; currency?: string }) =>
+    apiFetch<{ payout: Payout }>("/api/payouts", {
+      method: "POST",
+      body: { currency: "NGN", ...body },
+    }),
+
   list: (query?: { status?: string }) =>
     apiFetch<{ payouts: Payout[] }>("/api/payouts", { query }),
 
@@ -1591,10 +1598,11 @@ export const adminAPI = {
       { method: "POST", body: { note } },
     ),
 
-  refundTransaction: (transactionId: string, reason: string) =>
+  /** Refunds `amount` naira, or the whole remaining amount when omitted. */
+  refundTransaction: (transactionId: string, reason: string, amount?: number) =>
     apiFetch<{ refund: Refund }>(
       `/api/admin/transactions/${transactionId}/refund`,
-      { method: "POST", body: { reason } },
+      { method: "POST", body: amount === undefined ? { reason } : { reason, amount } },
     ),
 
   getTransactions: (query?: {

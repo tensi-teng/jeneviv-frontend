@@ -26,6 +26,7 @@ import {
   ErrorState,
   Field,
   InlineNote,
+  Input,
   Modal,
   PageHeader,
   FilterMenu,
@@ -86,6 +87,7 @@ export default function Admin() {
   const [note, setNote] = useState("");
   const [refundTarget, setRefundTarget] = useState<string | null>(null);
   const [refundReason, setRefundReason] = useState("");
+  const [refundAmount, setRefundAmount] = useState("");
 
   const stats = useAdminStats(isAdmin);
   // Every admin endpoint is requireAdmin on the server, so a signed-in merchant
@@ -97,7 +99,9 @@ export default function Admin() {
   const approve = useAction((id: string, why: string) => adminAPI.approveMerchant(id, why));
   const reject = useAction((id: string, why: string) => adminAPI.rejectMerchant(id, why));
   const suspend = useAction((id: string, why: string) => adminAPI.suspendMerchant(id, why));
-  const refund = useAction((id: string, why: string) => adminAPI.refundTransaction(id, why));
+  const refund = useAction((id: string, why: string, amount?: number) =>
+    adminAPI.refundTransaction(id, why, amount),
+  );
 
   const runAction = useMemo(
     () => ({
@@ -566,14 +570,21 @@ export default function Admin() {
       <ConfirmDialog
         open={Boolean(refundTarget)}
         title="Refund this transaction?"
-        description="The payer receives the amount back through the gateway."
+        description="The payer receives the refund back through the gateway. Leave the amount blank to refund everything still refundable."
         confirmLabel="Confirm refund"
         destructive
         loading={refund.loading}
         onConfirm={async () => {
           if (!refundTarget) return;
+          const trimmed = refundAmount.trim();
+          const amount = trimmed === "" ? undefined : Number(trimmed.replace(/,/g, ""));
+          if (amount !== undefined && (!Number.isFinite(amount) || amount <= 0)) {
+            notify("Check the amount", "Enter an amount greater than zero, or leave it blank.", "error");
+            return;
+          }
           try {
-            await refund.run(refundTarget, refundReason || "Admin refund");
+            await refund.run(refundTarget, refundReason || "Admin refund", amount);
+            setRefundAmount("");
             await transactions.refetch();
             // A refund moves money, so it belongs in the notification centre.
             notify("Refund started", "The reversal is queued with the gateway.", "success");
@@ -588,14 +599,25 @@ export default function Admin() {
         }}
         onClose={() => setRefundTarget(null)}
       >
-        <Field label="Reason" htmlFor="admin-refund-reason">
-          <Textarea
-            id="admin-refund-reason"
-            value={refundReason}
-            onChange={(event) => setRefundReason(event.target.value)}
-            placeholder="Why is this payment being returned?"
+        <Field label="Amount (naira)" htmlFor="admin-refund-amount" hint="Leave blank for the full remaining amount.">
+          <Input
+            id="admin-refund-amount"
+            inputMode="decimal"
+            placeholder="Full amount"
+            value={refundAmount}
+            onChange={(event) => setRefundAmount(event.target.value)}
           />
         </Field>
+        <div className="mt-4">
+          <Field label="Reason" htmlFor="admin-refund-reason">
+            <Textarea
+              id="admin-refund-reason"
+              value={refundReason}
+              onChange={(event) => setRefundReason(event.target.value)}
+              placeholder="Why is this payment being returned?"
+            />
+          </Field>
+        </div>
       </ConfirmDialog>
     </>
   );

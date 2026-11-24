@@ -12,7 +12,7 @@ import {
   Trash2,
   XCircle,
 } from "lucide-react";
-import { merchantsAPI, type BankAccount } from "@/lib/api";
+import { merchantsAPI, payoutsAPI, type BankAccount } from "@/lib/api";
 import BankPicker from "@/components/BankPicker";
 import { useAction, useBankAccounts, useBanks, useKyc, useSettlementStatus } from "@/hooks/useApi";
 import { useAuth } from "@/context/AuthContext";
@@ -28,6 +28,7 @@ import {
   InlineNote,
   Input,
   Modal,
+  Select,
   PageHeader,
   Pill,
   TONE_MEANING,
@@ -60,14 +61,13 @@ function SummaryTile({
 }
 
 /**
- * Bank & settlement. Under a split gateway (Paystack), every payment is routed to the
- * merchant's bank at the moment it is captured, so this page manages the
- * destination account — there is no platform wallet, no withdrawable balance
- * and no payout approval to wait on.
+ * Bank & settlement. Under a split gateway (Paystack), payments are routed to the
+ * merchant's bank at capture. Money collected before the switch sits in the
+ * wallet balance, which can be withdrawn to a bank account from this page.
  */
 export default function Payouts() {
   const gateway = useGateway();
-  const { merchant } = useAuth();
+  const { merchant, refreshMerchant } = useAuth();
   const { success, error: toastError } = useToast();
 
   const accounts = useBankAccounts();
@@ -76,6 +76,10 @@ export default function Payouts() {
   const settlementStatus = useSettlementStatus();
 
   const [showAddAccount, setShowAddAccount] = useState(false);
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  const [withdrawForm, setWithdrawForm] = useState({ bank_account_id: "", amount: "" });
+  const [withdrawing, setWithdrawing] = useState(false);
+  const payoutsBalance = Number(merchant?.payouts_balance_ngn ?? 0);
   const [pendingDelete, setPendingDelete] = useState<BankAccount | null>(null);
   const [accountForm, setAccountForm] = useState({
     bank_code: "",
@@ -140,7 +144,7 @@ export default function Payouts() {
         title="Bank & settlement"
         description={
           gateway.settles_direct
-            ? `${gateway.label} splits every payment as it is captured. Your collection goes straight to your bank — jeneviv never holds merchant money.`
+            ? `${gateway.label} sends each payment straight to your bank as it is captured. Money from earlier wallet payments stays here until you withdraw it.`
             : `${gateway.label} confirms every payment into your jeneviv wallet. Collections are paid out to the bank account you choose here.`
         }
         actions={
@@ -149,6 +153,30 @@ export default function Payouts() {
           </Button>
         }
       />
+
+      {payoutsBalance > 0 ? (
+        <Card className="mb-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-[12px] font-semibold text-ink-muted">Wallet balance</p>
+              <p className="mt-1 text-[22px] font-bold tracking-[-0.02em]">{formatMoney(payoutsBalance, "NGN")}</p>
+              <p className="mt-1 text-[12px] text-ink-muted">
+                From payments collected before {gateway.label} became the default.
+              </p>
+            </div>
+            <Button
+              disabled={accounts.data?.length === 0}
+              onClick={() => {
+                const preferred = accounts.data?.find((account) => account.is_default) ?? accounts.data?.[0];
+                setWithdrawForm({ bank_account_id: preferred?.id ?? "", amount: String(Math.floor(payoutsBalance)) });
+                setShowWithdraw(true);
+              }}
+            >
+              Withdraw
+            </Button>
+          </div>
+        </Card>
+      ) : null}
 
       {/* summary: meaning-based tiles */}
       <SummaryPanel columns={3} className="mb-6">
@@ -359,6 +387,68 @@ export default function Payouts() {
           </Card>
         </div>
       </div>
+
+      <Modal
+        open={showWithdraw}
+        onClose={() => setShowWithdraw(false)}
+        title="Withdraw wallet balance"
+        description="Money goes to the bank account you pick. It is paid out by our wallet gateway."
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setShowWithdraw(false)}>
+              Cancel
+            </Button>
+            <Button
+              loading={withdrawing}
+              disabled={!withdrawForm.bank_account_id || !withdrawForm.amount}
+              onClick={async () => {
+                const amount = Math.floor(Number(withdrawForm.amount.replace(/,/g, "")));
+                if (!Number.isFinite(amount) || amount <= 0 || amount > payoutsBalance) {
+                  toastError("Check the amount", `Enter an amount up to ${formatMoney(payoutsBalance, "NGN")}.`);
+                  return;
+                }
+                setWithdrawing(true);
+                try {
+                  await payoutsAPI.create({ bank_account_id: withdrawForm.bank_account_id, amount });
+                  success("Withdrawal started", "The transfer is on its way to your bank.");
+                  setShowWithdraw(false);
+                  await refreshMerchant();
+                } catch (err) {
+                  toastError("Could not withdraw", err instanceof Error ? err.message : "Try again shortly.");
+                } finally {
+                  setWithdrawing(false);
+                }
+              }}
+            >
+              Withdraw
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <Field label="Bank account" htmlFor="withdraw-account">
+            <Select
+              id="withdraw-account"
+              value={withdrawForm.bank_account_id}
+              onChange={(event) => setWithdrawForm({ ...withdrawForm, bank_account_id: event.target.value })}
+            >
+              {(accounts.data ?? []).map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.bank_name ?? account.bank_code} ••{account.account_number.slice(-4)}
+                </option>
+              ))}
+            </Select>
+          </Field>
+          <Field label="Amount (naira)" htmlFor="withdraw-amount" hint={`Up to ${formatMoney(payoutsBalance, "NGN")}.`}>
+            <Input
+              id="withdraw-amount"
+              inputMode="numeric"
+              value={withdrawForm.amount}
+              onChange={(event) => setWithdrawForm({ ...withdrawForm, amount: event.target.value })}
+            />
+          </Field>
+        </div>
+      </Modal>
 
       <Modal
         open={showAddAccount}
