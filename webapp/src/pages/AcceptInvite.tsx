@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ArrowRight, CheckCircle2, Loader2, XCircle } from "lucide-react";
+import { ArrowRight, Check, Loader2, XCircle } from "lucide-react";
 import { workspacesAPI } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui";
@@ -63,7 +63,7 @@ export default function AcceptInvite() {
 
         {state.kind === "done" ? (
           <>
-            <CheckCircle2 size={26} className="mx-auto text-money" />
+            <Check size={26} className="mx-auto text-money" />
             <h1 className="mt-4 text-[17px] font-bold tracking-tight">You're in</h1>
             <p className="mt-1 text-[13px] text-ink-muted">
               You now have access to {state.workspace}.

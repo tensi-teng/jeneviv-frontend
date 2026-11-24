@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Mail } from "lucide-react";
+import { ArrowLeft, Check, Mail } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { errorMessage } from "@/hooks/useApi";
 import { authAPI } from "@/lib/api";
@@ -59,7 +59,7 @@ export default function ForgotPassword() {
       >
         <div className="rounded-card border border-line bg-white px-5 py-6 shadow-card">
           <span className="grid h-11 w-11 place-items-center rounded-full bg-[#d5e8c4]">
-            <CheckCircle2 size={19} className="text-ink" />
+            <Check size={19} className="text-ink" />
           </span>
           <p className="mt-4 text-[16px] font-bold tracking-tight text-ink">
             We sent a link to
