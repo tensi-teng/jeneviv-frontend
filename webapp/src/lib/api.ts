@@ -1553,6 +1553,8 @@ export interface SettlementStatus {
   can_withdraw: boolean;
   kyc_status: string;
   bank_account_verified: boolean;
+  /** Paystack's own verification of the split destination. null when unknown. */
+  subaccount_verified: boolean | null;
   default_bank_account: {
     id: string | null;
     bank_name: string | null;
